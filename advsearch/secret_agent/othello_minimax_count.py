@@ -11,7 +11,7 @@ from .minimax import minimax_move
 # do seu agente.
 
 
-def make_move(state) -> Tuple[int, int]:
+def make_move(state: GameState) -> Tuple[int, int]:
     """
     Returns a move for the given game state
     :param state: state to make the move
@@ -23,10 +23,10 @@ def make_move(state) -> Tuple[int, int]:
     # Remova-o e coloque uma chamada para o minimax_move (que vc implementara' no modulo minimax).
     # A chamada a minimax_move deve receber sua funcao evaluate como parametro.
 
-    return random.choice([(2, 3), (4, 5), (5, 4), (3, 2)])
+    return minimax_move(state, max_depth= 10, eval_func=evaluate_count)
 
 
-def evaluate_count(state, player:str) -> float:
+def evaluate_count(state: GameState, player:str) -> float:
     """
     Evaluates an othello state from the point of view of the given player. 
     If the state is terminal, returns its utility. 
@@ -34,4 +34,10 @@ def evaluate_count(state, player:str) -> float:
     :param state: state to evaluate (instance of GameState)
     :param player: player to evaluate the state for (B or W)
     """
-    return 0   # substitua pelo seu codigo
+    board  = state.get_board()
+    adv = 'B' if player=='W' else 'W'
+    print(f'Diferença de peças: ', board.piece_count[player] - board.piece_count[adv])
+    return board.piece_count[player] - board.piece_count[adv]
+
+                                       
+    
