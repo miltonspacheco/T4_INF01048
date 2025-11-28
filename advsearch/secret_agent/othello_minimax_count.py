@@ -36,7 +36,6 @@ def evaluate_count(state: GameState, player:str) -> float:
     """
     board  = state.get_board()
     adv = 'B' if player=='W' else 'W'
-    print(f'Diferença de peças: ', board.piece_count[player] - board.piece_count[adv])
     return board.piece_count[player] - board.piece_count[adv]
 
                                        

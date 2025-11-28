@@ -36,6 +36,7 @@ def _alphabeta(state, max_depth: int, depth: int, alpha: float, beta: float,
                 best_value = value
                 best_move = move
             beta = min(beta, best_value)
+            # Para para fazer poda alfa-beta
             if beta <= alpha:
                 break
 
