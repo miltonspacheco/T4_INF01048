@@ -16,12 +16,6 @@ EVAL_TEMPLATE = [
     [100, -30, 6, 2, 2, 6, -30, 100]
 ]
 
-# Mapeamento dos corners e das extremidades
-CORNERS = {(0,0), (0,7), (7,0), (7,7)}
-EDGES = {(0,i) for i in range(8)} | {(7,i) for i in range(8)} | \
-        {(i,0) for i in range(8)} | {(i,7) for i in range(8)}
-
-
 
 def make_move(state) -> Tuple[int, int]:
     """
@@ -46,51 +40,26 @@ def evaluate_custom(state: GameState, player:str) -> float:
     adv = 'B' if player == 'W' else 'W'
 
     # --- 1. Mobilidade
-    player_moves = len(state.legal_moves()) if state.player == player else \
-                   len(board.legal_moves(player))
-    adv_moves = len(board.legal_moves(adv))
+    # Mobilidade é quantas jogadas disponiveis temos se fossemos jogar nesse
+    player_moves = len(board.legal_moves(player))
+    adv_moves    = len(board.legal_moves(adv))
 
     mobility_score = 0
     if player_moves + adv_moves != 0:
+        # Multiplica por 100 para se comparar com o positional_score
+        # score de mobilidade: diferença/total de movimentos
         mobility_score = 100 * (player_moves - adv_moves) / (player_moves + adv_moves)
 
     # --- 2. Mask (usada previamente)
     positional_score = 0
-    for r in range(8):
-        for c in range(8):
-            v = board.tiles[r][c]
-            if v == player:
-                positional_score += EVAL_TEMPLATE[r][c]
-            elif v == adv:
-                positional_score -= EVAL_TEMPLATE[r][c]
+    for r, row in enumerate(board.tiles):
+        for c, tile in enumerate(row):
+            if tile == player:
+                positional_score+=EVAL_TEMPLATE[r][c]
+            if tile == adv:
+                positional_score-=EVAL_TEMPLATE[r][c]
+        
 
-    # --- 3. Corner + edge
-    corner_score = 0
-
-    for (r, c) in CORNERS:
-        v = board.tiles[r][c]
-        if v == player:
-            corner_score += 200
-        elif v == adv:
-            corner_score -= 200
-
-    edge_score = 0
-    for (r, c) in EDGES:
-        v = board.tiles[r][c]
-        if v == player:
-            edge_score += 10
-        elif v == adv:
-            edge_score -= 10
-
-    # --- Weighted combination ----------------------------------
-    # Tuned weights for a depth-10 minimax:
-    # Mobility:           40%
-    # Positional mask:    40%
-    # Corners/edges:      20%
-    total = (
-        0.4 * mobility_score +
-        0.4 * positional_score +
-        0.2 * (corner_score + edge_score)
-    )
-
+    # --- Combinação dos dois scores
+    total = mobility_score+positional_score
     return total
