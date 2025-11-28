@@ -61,5 +61,5 @@ def evaluate_custom(state: GameState, player:str) -> float:
         
 
     # --- Combinação dos dois scores
-    total = mobility_score+positional_score
+    total = 1.2*mobility_score+positional_score
     return total
