@@ -34,7 +34,7 @@ def make_move(state) -> Tuple[int, int]:
 
 def evaluate_custom(state: GameState, player:str) -> float:
     """
-    A heuristica que combina mobilidade, pesos posicionais e posições conringa
+    A heuristica que combina mobilidade e pesos posicionais
     """
     board = state.get_board()
     adv = 'B' if player == 'W' else 'W'
